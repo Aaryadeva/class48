@@ -131,7 +131,7 @@ function draw()
        gameState="end";
        fill("black")
        textSize(30)
-
+       turn=turn-1
        text("GAME OVER",mario.x-100,height/2);
        restart.visible=true
        restart.x=mario.x
@@ -161,8 +161,8 @@ function draw()
   }
   drawSprites()
   text("Coins: "+totalCoins,mario.x-180,50)
-  text("Time: "+m,mario.x-300,50)
-  
+  text("Time: "+m,mario.x+100,50)
+  text("Turn: "+turn,mario.x+200,50)
 }
 
 function reset()
@@ -170,14 +170,14 @@ function reset()
   gameState="play";
   mario.changeAnimation("standing",mario_standingImg);
   totalCoins=0
-  turn=turn-1
+  
   m=120
   restart.visible=false
 }
 
 function spawnEnemies(){
   if(frameCount%400===0){
-  enemy=createSprite(width,height-86,20,20)
+  enemy=createSprite(width,height-90,20,20)
   enemy.velocityX=-1
   enemy.addImage(enemyImg)
   enemy.scale=0.2
@@ -202,7 +202,7 @@ function spawnBricks(){
 }
 function spawnObstacles(){
   if(frameCount%700===0){
-    obstacle=createSprite(mario.x+250,height-106,20,10)
+    obstacle=createSprite(mario.x+250,height-110,20,10)
     obstacle.addAnimation("plant",obstacleImg)
     obstacle.scale=0.75
     obstacleGroup.add(obstacle)
