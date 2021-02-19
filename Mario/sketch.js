@@ -2,6 +2,7 @@ var mario,mario_standingImg,mario_runningImg,mario_collidedImg,ground,groundImg,
 var enemy,enemyImg,mushroom,mushroomImg,obstacle,obstacleImg,enemyKill,brickImg,restart,restartImg,castleImg,castle
 var totalCoins = 0
 var m=120;
+var turn=3
 var distance=0;
 var enemyGroup,enemyKillGroup
 var gameState="play"
@@ -36,9 +37,7 @@ function setup(){
   restart.addImage(restartImg)
   restart.visible=false
 
-  castle=createSprite(mario.x+250,height-100)
-  castle.addImage(castleImg)
-  castle.visible=false
+  
   
   
   enemyGroup=createGroup()
@@ -68,7 +67,7 @@ function draw()
       if(keyIsDown(RIGHT_ARROW))
       {
         mario.changeAnimation("running",mario_runningImg)
-        mario.x=mario.x+20
+        mario.x=mario.x+5
         distance++;
       }
       else
@@ -116,13 +115,14 @@ function draw()
         coin.lifetime=10
         totalCoins=totalCoins+1
       }
-      if(distance>=100)
+      if(distance>=1000&&m>0)
       {
         gameState="end"
-        castle.visible=true
+        castle=createSprite(mario.x+250,height-100)
+        castle.addImage(castleImg)
         fill("black")
        textSize(30)
-       text("YOU WON",mario.x-100,height/2);
+       text("YOU WON",castle.x-100,height-50);
       }
       
       if(enemyGroup.isTouching(mario)||obstacleGroup.isTouching(mario)||m===0)
@@ -131,9 +131,18 @@ function draw()
        gameState="end";
        fill("black")
        textSize(30)
-       text("GAME OVER",mario.x-100,height/2);
-       restart,visible=true
 
+       text("GAME OVER",mario.x-100,height/2);
+       restart.visible=true
+       restart.x=mario.x
+       
+      }
+      if(turn===0){
+        gameState="end"
+        fill("black")
+        textSize(30)
+        text("GAME OVER",mario.x-100,height-200);
+        text("BETTER LUCK NEXT TIME",mario.x-100,height-250);
       }
   }
     
@@ -161,12 +170,14 @@ function reset()
   gameState="play";
   mario.changeAnimation("standing",mario_standingImg);
   totalCoins=0
+  turn=turn-1
   m=120
+  restart.visible=false
 }
 
 function spawnEnemies(){
   if(frameCount%400===0){
-  enemy=createSprite(width,height-96,20,20)
+  enemy=createSprite(width,height-86,20,20)
   enemy.velocityX=-1
   enemy.addImage(enemyImg)
   enemy.scale=0.2
@@ -191,7 +202,7 @@ function spawnBricks(){
 }
 function spawnObstacles(){
   if(frameCount%700===0){
-    obstacle=createSprite(mario.x+250,height-116,20,10)
+    obstacle=createSprite(mario.x+250,height-106,20,10)
     obstacle.addAnimation("plant",obstacleImg)
     obstacle.scale=0.75
     obstacleGroup.add(obstacle)
